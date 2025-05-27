@@ -1,0 +1,3 @@
+package ranker
+
+func _() {}
