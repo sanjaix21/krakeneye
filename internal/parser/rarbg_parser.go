@@ -1,3 +1,4 @@
+// TODO: add methods to indentify codecs and containers correctly
 package parser
 
 import (
@@ -111,7 +112,7 @@ func (r *RarbgParser) extractSize(s *goquery.Selection, torrent *TorrentFile) {
 // Seeders
 func (r *RarbgParser) extractSeeders(s *goquery.Selection, torrent *TorrentFile) {
 	if seedersText := strings.TrimSpace(s.Find("td.lista").Eq(5).Text()); seedersText != "" {
-		if seedersInt, err := strconv.Atoi(seedersText); err != nil {
+		if seedersInt, err := strconv.Atoi(seedersText); err == nil {
 			torrent.Seeders = seedersInt
 		}
 	}
@@ -121,7 +122,7 @@ func (r *RarbgParser) extractSeeders(s *goquery.Selection, torrent *TorrentFile)
 func (r *RarbgParser) extractLeechers(s *goquery.Selection, torrent *TorrentFile) {
 	// Leechers
 	if leechersText := strings.TrimSpace(s.Find("td.lista").Eq(6).Text()); leechersText != "" {
-		if leechersInt, err := strconv.Atoi(leechersText); err != nil {
+		if leechersInt, err := strconv.Atoi(leechersText); err == nil {
 			torrent.Leechers = leechersInt
 		}
 	}
@@ -172,7 +173,119 @@ func (r *RarbgParser) FetchTorrentDetails(torrent *TorrentFile) error {
 		}
 	})
 
+	doc.Find("table.lista tr").Each(func(i int, s *goquery.Selection) {
+		header := strings.TrimSpace(s.Find("td.header2").Text())
+		value := strings.TrimSpace(s.Find("td.lista").Text())
+
+		switch header {
+		case "Description:":
+			torrent.MetaInfo = value
+			r.ParseVideoSpecs(value, torrent)
+
+		case "Language:":
+			torrent.Language = value
+
+		case "Downloads:":
+			if downloads, err := strconv.Atoi(value); err == nil {
+				torrent.Downloads = downloads
+			}
+		}
+	})
+
+	r.parseFilenameMetaData(torrent.Name, torrent)
+
+	torrent.Trusted = r.isTrustedUploader(torrent.Uploader)
+
 	return nil
+}
+
+func (r *RarbgParser) ParseVideoSpecs(description string, torrent *TorrentFile) {
+	desc := strings.ToLower(description)
+
+	// Video Codec
+	if strings.Contains(desc, "hevc") || strings.Contains(desc, "x265") ||
+		strings.Contains(desc, "h265") || strings.Contains(desc, "avc") {
+		torrent.VideoCodec = "HEVC/x265"
+	} else if strings.Contains(desc, "x264") || strings.Contains(desc, "h264") || strings.Contains(desc, "h.264") {
+		torrent.VideoCodec = "x264"
+	} else if strings.Contains(desc, "av1") {
+		torrent.VideoCodec = "AV1"
+	}
+
+	// Audio Codec
+	if strings.Contains(desc, "atmos") {
+		torrent.AudioCodec = "Dolby Atmos"
+	} else if strings.Contains(desc, "dts-hd") || strings.Contains(desc, "truehd") {
+		torrent.AudioCodec = "DTS-HD/TrueHD"
+	} else if strings.Contains(desc, "dts") {
+		torrent.AudioCodec = "DTS"
+	} else if strings.Contains(desc, "aac") {
+		torrent.AudioCodec = "AAC"
+	} else if strings.Contains(desc, "opus") {
+		torrent.AudioCodec = "OPUS"
+	} else if strings.Contains(desc, "mp3") {
+		torrent.AudioCodec = "MP3"
+	}
+
+	// Containers
+	if strings.Contains(desc, "matroska") || strings.Contains(torrent.Name, "mkv") {
+		torrent.Container = "Matroska/MKV"
+	} else if strings.Contains(torrent.Name, ".mp4") {
+		torrent.Container = "MP4"
+	}
+
+	// Bit depth
+	if strings.Contains(desc, "10bit") || strings.Contains(desc, "10-bit") {
+		torrent.BitDepth = "10-bit"
+	} else if strings.Contains(desc, "8bit") || strings.Contains(desc, "8-bit") {
+		torrent.BitDepth = "8-bit"
+	}
+}
+
+// Resolution
+func (r *RarbgParser) parseFilenameMetaData(filename string, torrent *TorrentFile) {
+	name := strings.ToUpper(filename)
+
+	resolutions := []string{"2106P", "1080P", "720P", "480P"}
+	for _, res := range resolutions {
+		if strings.Contains(name, res) {
+			torrent.Resolution = res
+			break
+		}
+	}
+
+	// Source
+	if strings.Contains(name, "IMAX") {
+		torrent.Source = "IMAX"
+	} else if strings.Contains(name, "UHD") || strings.Contains(name, "4K") || strings.Contains(name, "2160P") {
+		torrent.Source = "UHD"
+	} else if strings.Contains(name, "BLURAY") || strings.Contains(name, "BLU-RAY") || strings.Contains(name, "BDREMUX") || strings.Contains(name, "BDRIP") {
+		torrent.Source = "BLURAY"
+	} else if strings.Contains(name, "WEBRIP") || strings.Contains(name, "WEB-DL") || strings.Contains(name, "WEB") || strings.Contains(name, "AMZN") || strings.Contains(name, "NF") || strings.Contains(name, "HMAX") {
+		torrent.Source = "WEB"
+	} else if strings.Contains(name, "CAM") || strings.Contains(name, "CAMRIP") {
+		torrent.Source = "CAM"
+	}
+}
+
+// Trusted Uploaders
+
+func (r *RarbgParser) isTrustedUploader(uploader string) bool {
+	trustedUploaers := []string{
+		"RARBG", "YTS", "ETRG", "Prof", "PMEDIA", "Wrath", "FGT",
+		"SPARKS", "UTR", "PSA", "DON", "AMZN", "GalaxyRG", "GalaxyTV",
+		"QxR", "Tigole", "CtrlHD", "NTb", "TBS", "RMTeam", "Judas",
+		"SUSPENSE", "EBP", "icecracked", "DataDiva", "Accid",
+	}
+
+	uploaderLower := strings.ToLower(uploader)
+	for _, trusted := range trustedUploaers {
+		if strings.Contains(uploaderLower, strings.ToLower(trusted)) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (r *RarbgParser) EnrichTorrents(torrents []TorrentFile) []TorrentFile {

@@ -7,11 +7,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/sanjaix21/krakeneye/internal/display"
 	"github.com/sanjaix21/krakeneye/internal/parser"
 	"github.com/sanjaix21/krakeneye/internal/sites"
 )
 
-func getUserInput() string {
+func _getUserInput() string {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("🔍 Enter search query (e.g. interstellar 2014): ")
 	query, _ := reader.ReadString('\n')
@@ -30,7 +31,9 @@ func main() {
 	fmt.Printf("🔸 Site    : %s\n", result.SiteName)
 	fmt.Printf("🔗 Mirror  : %s\n", result.Mirror)
 
-	tempQuery := getUserInput()
+	// tempQuery := getUserInput()
+	// tempQuery := "interstellar"
+	tempQuery := "brooklyn nine nine s01"
 
 	torrentParser, err := parser.NewParser(result.SiteName, result.Mirror)
 	if err != nil {
@@ -44,8 +47,6 @@ func main() {
 
 	enrichedTorrents := torrentParser.EnrichTorrents(torrents)
 	for idx, torrent := range enrichedTorrents {
-		fmt.Printf("[%d] %v", idx, torrent.Name)
-		fmt.Println(torrent.MagnetLink)
-		fmt.Println()
+		display.PrintTorrentDebug(torrent, idx+1)
 	}
 }

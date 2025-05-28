@@ -16,6 +16,7 @@ type TorrentFile struct {
 	Uploader   string
 	MagnetLink string
 	Language   string
+	Downloads  int
 	MetaInfo   string
 	Source     string
 	UploadDate string
