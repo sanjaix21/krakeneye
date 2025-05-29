@@ -27,6 +27,7 @@ type TorrentFile struct {
 	AudioCodec string
 	Container  string
 	BitDepth   string
+	Score      float64
 }
 
 type TorrentParser interface {
