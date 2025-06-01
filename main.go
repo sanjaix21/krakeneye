@@ -69,7 +69,6 @@ func main() {
 	displayOutput := display.NewDisplayManager(torrentPointers)
 	displayOutput.ListTorrents()
 	option, err := strconv.Atoi(getUserInput("option"))
-	fmt.Printf("%T\n", option)
 	if err != nil {
 		fmt.Printf("Unable to convert string to int\n")
 		return
