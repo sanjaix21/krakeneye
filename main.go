@@ -1,6 +1,3 @@
-// TODO:
-// make enrichedTorrents to type []*TorrentFile
-// add a method to get input of which torrent then copy/display it's magnet link
 package main
 
 import (
@@ -47,8 +44,6 @@ func main() {
 	fmt.Printf("🔗 Mirror  : %s\n", result.Mirror)
 
 	tempQuery := getUserInput("search")
-	// // tempQuery := "interstellar"
-	// tempQuery := "brooklyn nine nine s01"
 
 	torrentParser, err := parser.NewParser(result.SiteName, result.Mirror)
 	if err != nil {
@@ -63,17 +58,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// debugger := display.NewDebugDisplay()
 	enrichedTorrents := torrentParser.EnrichTorrents(torrents)
 	rankerFunc := &ranker.RankTorrent{}
-
-	// Convert []parser.TorrentFile to []*parser.TorrentFile
-
-	// for idx, torrent := range enrichedTorrents {
-	// 	// display.PrintTorrentDebug(torrent, idx+1)
-	// 	_ = idx
-	// 	debugger.PrintTorrentScoreDebug(torrent)
-	// }
 	var torrentPointers []*parser.TorrentFile
 	for i := range enrichedTorrents {
 		enrichedTorrents[i].Score = rankerFunc.RankTorrentFile(enrichedTorrents[i])
