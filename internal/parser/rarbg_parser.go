@@ -1,7 +1,8 @@
-// TODO: add methods to indentify code and containers correctly
+// TODO:
 package parser
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -52,6 +53,9 @@ func (r *RarbgParser) Search(query string) ([]TorrentFile, error) {
 		}
 	})
 
+	if len(torrents) <= 0 {
+		return torrents, errors.New("none")
+	}
 	fmt.Printf("📦 Found %d torrents\n", len(torrents))
 	return torrents, nil
 }
@@ -262,20 +266,26 @@ func (r *RarbgParser) parseVideoSpecs(description string, torrent *TorrentFile) 
 func (r *RarbgParser) parseFilenameMetaData(filename string, torrent *TorrentFile) {
 	name := strings.ToUpper(filename)
 
-	torrent.Resolution = "Unknown"
-	resolutions := []string{"2160P", "1080P", "720P", "480P"}
-	for _, res := range resolutions {
-		if strings.Contains(name, res) {
-			torrent.Resolution = res
-			break
-		}
+	switch {
+	case strings.Contains(name, "2160P") || strings.Contains(name, "4K") || strings.Contains(name, "UHD"):
+		torrent.Resolution = "2160P"
+
+	case strings.Contains(name, "1080P") || strings.Contains(name, "FHD"):
+		torrent.Resolution = "1080P"
+
+	case strings.Contains(name, "720P"):
+		torrent.Resolution = "720P"
+
+	case strings.Contains(name, "480P") || strings.Contains(name, "SD"):
+		torrent.Resolution = "480P"
+
+	default:
+		torrent.Resolution = "Unknown"
 	}
 
 	// Source
 	if strings.Contains(name, "IMAX") {
 		torrent.Source = "IMAX"
-	} else if strings.Contains(name, "UHD") || strings.Contains(name, "4K") || strings.Contains(name, "2160P") {
-		torrent.Source = "UHD"
 	} else if strings.Contains(name, "BLURAY") || strings.Contains(name, "BLU-RAY") || strings.Contains(name, "BDREMUX") || strings.Contains(name, "BDRIP") {
 		torrent.Source = "BLURAY"
 	} else if strings.Contains(name, "WEBRIP") || strings.Contains(name, "WEB-DL") || strings.Contains(name, "WEB") || strings.Contains(name, "AMZN") || strings.Contains(name, "NF") || strings.Contains(name, "HMAX") {
