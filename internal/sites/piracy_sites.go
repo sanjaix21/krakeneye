@@ -11,21 +11,6 @@ type Site struct {
 // sites are given in prority order, add new sites in the correct place based on your priority
 var PiracySites = []Site{
 	{
-		Name:     "1337x",
-		Category: "torrents",
-		Primary:  "https://1337x.to/",
-		Weight:   1,
-		Mirrors: []string{
-			"https://1337x.to/",
-			"https://1337x.st/",
-			"https://x1337x.cc/",
-			"https://x1337x.ws/",
-			"https://x1337x.eu/",
-			"https://x1337x.se/",
-		},
-	},
-
-	{
 		Name:     "rarbg",
 		Category: "torrents",
 		Primary:  "rarbg.to",
@@ -39,18 +24,32 @@ var PiracySites = []Site{
 		},
 	},
 
-	{
-		Name:     "https://kickasstorrents.cr/",
-		Category: "torrents",
-		Primary:  "https://kickasstorrents.cr/",
-		Weight:   2,
-		Mirrors: []string{
-			"https://kickasstorrents.cr/",
-			"https://kickasstorrents.cr/",
-			"https://kickass.sx/",
-			"https://katcr.to/",
-			"https://katcr.to/",
-			"https://kickasstorrent.cr/",
-		},
-	},
+	// {
+	// 	Name:     "https://kickasstorrents.cr/",
+	// 	Category: "torrents",
+	// 	Primary:  "https://kickasstorrents.cr/",
+	// 	Weight:   2,
+	// 	Mirrors: []string{
+	// 		"https://kickasstorrents.cr/",
+	// 		"https://kickasstorrents.cr/",
+	// 		"https://kickass.sx/",
+	// 		"https://katcr.to/",
+	// 		"https://katcr.to/",
+	// 		"https://kickasstorrent.cr/",
+	// 	},
+	// },
+	// {
+	// 	Name:     "1337x",
+	// 	Category: "torrents",
+	// 	Primary:  "https://1337x.to/",
+	// 	Weight:   1,
+	// 	Mirrors: []string{
+	// 		"https://1337x.to/",
+	// 		"https://1337x.st/",
+	// 		"https://x1337x.cc/",
+	// 		"https://x1337x.ws/",
+	// 		"https://x1337x.eu/",
+	// 		"https://x1337x.se/",
+	// 	},
+	// },
 }

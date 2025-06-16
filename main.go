@@ -22,16 +22,34 @@ func getUserInput(query string) string {
 
 	switch {
 	case strings.Contains(query, "search"):
-		fmt.Print("🔍 Enter search query (e.g. interstellar 2014): ")
+		fmt.Printf("🔍 Enter search query (e.g. interstellar 2014): ")
 		query, _ := reader.ReadString('\n')
 		return strings.TrimSpace(query)
 	case strings.Contains(query, "option"):
 		fmt.Printf("➡️ Enter id to get magnet link (e.g. 2): ")
 		option, _ := reader.ReadString('\n')
 		return strings.TrimSpace(option)
+	case strings.Contains(query, "new"):
+		fmt.Printf("❓ Want to make a new search (y/n): ")
+		option, _ := reader.ReadString('\n')
+		return strings.TrimSpace(option)
 	default:
 		return ""
 	}
+}
+
+func searchMedia(torrentParser parser.TorrentParser) ([]parser.TorrentFile, error) {
+	tempQuery := getUserInput("search")
+
+	torrents, err := torrentParser.Search(tempQuery)
+	if err != nil {
+		if err.Error() == "none" {
+			fmt.Printf("No torrents found. Try checking name of the movie/tv\n")
+		}
+		log.Fatal(err)
+	}
+
+	return torrents, nil
 }
 
 func main() {
@@ -46,49 +64,43 @@ func main() {
 	fmt.Printf("🔸 Site    : %s\n", result.SiteName)
 	fmt.Printf("🔗 Mirror  : %s\n", result.Mirror)
 
-	tempQuery := getUserInput("search")
-	// // tempQuery := "interstellar"
-	// tempQuery := "brooklyn nine nine s01"
-
 	torrentParser, err := parser.NewParser(result.SiteName, result.Mirror)
 	if err != nil {
 		log.Fatalf("Could not create parser: %v", err)
 	}
 
-	torrents, err := torrentParser.Search(tempQuery)
-	if err != nil {
-		if err.Error() == "none" {
-			fmt.Printf("No torrents found. Try checking name of the movie/tv\n")
+	for {
+
+		torrents, err := searchMedia(torrentParser)
+		if err != nil {
+			log.Fatalf("Failed to search for media")
 		}
-		log.Fatal(err)
+
+		enrichedTorrents := torrentParser.EnrichTorrents(torrents)
+		rankerFunc := &ranker.RankTorrent{}
+
+		var torrentPointers []*parser.TorrentFile
+		for i := range enrichedTorrents {
+			enrichedTorrents[i].Score = rankerFunc.RankTorrentFile(enrichedTorrents[i])
+			torrentPointers = append(torrentPointers, &enrichedTorrents[i])
+		}
+
+		displayOutput := display.NewDisplayManager(torrentPointers)
+		displayOutput.ListTorrents()
+		option, err := strconv.Atoi(getUserInput("option"))
+		fmt.Printf("%T\n", option)
+		if err != nil {
+			fmt.Printf("Unable to convert string to int\n")
+			return
+		}
+		fmt.Println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘")
+		fmt.Println(torrentPointers[option].MagnetLink)
+		fmt.Println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘")
+
+		newSearch := getUserInput("new")
+		if newSearch != "y" {
+			fmt.Println("Thanks for using KrakenEye 🐉. May the Force be with you 🌠")
+			break
+		}
 	}
-
-	// debugger := display.NewDebugDisplay()
-	enrichedTorrents := torrentParser.EnrichTorrents(torrents)
-	rankerFunc := &ranker.RankTorrent{}
-
-	// Convert []parser.TorrentFile to []*parser.TorrentFile
-
-	// for idx, torrent := range enrichedTorrents {
-	// 	// display.PrintTorrentDebug(torrent, idx+1)
-	// 	_ = idx
-	// 	debugger.PrintTorrentScoreDebug(torrent)
-	// }
-	var torrentPointers []*parser.TorrentFile
-	for i := range enrichedTorrents {
-		enrichedTorrents[i].Score = rankerFunc.RankTorrentFile(enrichedTorrents[i])
-		torrentPointers = append(torrentPointers, &enrichedTorrents[i])
-	}
-
-	displayOutput := display.NewDisplayManager(torrentPointers)
-	displayOutput.ListTorrents()
-	option, err := strconv.Atoi(getUserInput("option"))
-	fmt.Printf("%T\n", option)
-	if err != nil {
-		fmt.Printf("Unable to convert string to int\n")
-		return
-	}
-	fmt.Println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘")
-	fmt.Println(torrentPointers[option].MagnetLink)
-	fmt.Println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘")
 }
