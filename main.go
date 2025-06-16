@@ -1,3 +1,6 @@
+// TODO:
+// make enrichedTorrents to type []*TorrentFile
+// add a method to get input of which torrent then copy/display it's magnet link
 package main
 
 import (
@@ -100,23 +103,4 @@ func main() {
 			break
 		}
 	}
-
-	enrichedTorrents := torrentParser.EnrichTorrents(torrents)
-	rankerFunc := &ranker.RankTorrent{}
-	var torrentPointers []*parser.TorrentFile
-	for i := range enrichedTorrents {
-		enrichedTorrents[i].Score = rankerFunc.RankTorrentFile(enrichedTorrents[i])
-		torrentPointers = append(torrentPointers, &enrichedTorrents[i])
-	}
-
-	displayOutput := display.NewDisplayManager(torrentPointers)
-	displayOutput.ListTorrents()
-	option, err := strconv.Atoi(getUserInput("option"))
-	if err != nil {
-		fmt.Printf("Unable to convert string to int\n")
-		return
-	}
-	fmt.Println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘")
-	fmt.Println(torrentPointers[option].MagnetLink)
-	fmt.Println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘")
 }
