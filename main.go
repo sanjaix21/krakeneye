@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"strconv"
 	"strings"
@@ -15,6 +16,7 @@ import (
 	"github.com/sanjaix21/krakeneye/internal/parser"
 	"github.com/sanjaix21/krakeneye/internal/ranker"
 	"github.com/sanjaix21/krakeneye/internal/sites"
+	"github.com/sanjaix21/krakeneye/internal/webui"
 )
 
 func getUserInput(query string) string {
@@ -53,6 +55,22 @@ func searchMedia(torrentParser parser.TorrentParser) ([]parser.TorrentFile, erro
 }
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "--web" {
+		port := 8787
+
+		for {
+			ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+			if err != nil {
+				port++
+				continue
+			}
+
+			_ = ln.Close()
+			webui.StartServer(port)
+			return
+		}
+	}
+
 	fmt.Println("🏴‍☠️ Scanning for a working piracy site mirror...")
 
 	result, err := sites.FindFirstWorkingMirror()
@@ -82,6 +100,7 @@ func main() {
 		var torrentPointers []*parser.TorrentFile
 		for i := range enrichedTorrents {
 			enrichedTorrents[i].Score = rankerFunc.RankTorrentFile(enrichedTorrents[i])
+			enrichedTorrents[i].SiteName = result.SiteName
 			torrentPointers = append(torrentPointers, &enrichedTorrents[i])
 		}
 

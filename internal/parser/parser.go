@@ -11,6 +11,7 @@ type TorrentFile struct {
 	Href       string
 	Size       float64
 	SizeRaw    string
+	SiteName   string
 	Seeders    int
 	Leechers   int
 	Uploader   string
