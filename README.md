@@ -1,6 +1,6 @@
 # 🧿 KrakenEye
 
-**KrakenEye** is a command-line torrent discovery tool built for pirates, by pirates. It scrapes torrent data from public trackers, starting with **RARBG**, with plans to expand into **1337x** and **KickassTorrent**.
+**KrakenEye** is a command-line and web-based torrent discovery tool built for pirates, by pirates. It scrapes torrent data from public trackers, currently starting with **RARBG**, with plans to expand into **1337x**, **KickassTorrent**, and more.
 
 > ⚠️ **Disclaimer:** This project is for educational and research purposes only. Use responsibly and comply with all applicable laws in your region.
 
@@ -8,97 +8,95 @@
 
 ## ⚙️ Version
 
-**Current:** `v0.0.1-alpha`
+**Current:** `v0.1.0-alpha`
 
-This is an early prototype release meant to test the parser and search engine.
+- CLI + WebUI functional  
+- Telegram bot in development  
+- Early parser, ranker, and scoring in place
 
 ---
 
 ## 🎯 What It Does
 
-- 🌐 Connects to a working RARBG mirror
-- 🔍 Accepts a search query from the user (e.g., `interstellar 2014`)
-- 📄 Parses and displays:
-  - Torrent title
+- 🌍 Connects to a working RARBG mirror
+- 🔎 Accepts search queries from user or Web UI
+- 📄 Parses and ranks torrent results
+- 🧠 Displays:
+  - Title
   - Size
-  - Category
-  - Seeders / Leechers
-  - Uploader
-  - Upload date
-  - Magnet link (✅ early feature)
+  - Resolution
+  - Source
+  - Seeders
+  - KrakenEye Score™
+  - Magnet link (copyable via UI)
 
 ---
 
-## 📥 How To Use
+## 🚀 How To Use
+
+### 🖥️ CLI Mode
 
 ```bash
 go run main.go
 ```
 
-Then enter your search term when prompted:
+Then follow prompts:
 
 ```bash
-🔍 Enter search query (e.g. interstellar 2014): interstellar 2014
+🔍 Enter search query (e.g. interstellar 2014): the matrix 1999
 ```
 
-The tool will:
-1. Find a working RARBG mirror
-2. Perform a search using your query
-3. Parse and display magnet links and torrent info
+---
+
+### 🌐 Web UI Mode
+
+```bash
+go run main.go --web
+```
+
+- Default port: `8787` (auto-increments if busy)
+- Open browser at: [http://localhost:8787](http://localhost:8787)
+
+A pirate-themed interface with search bar, elegant results, copy magnet buttons, and KrakenEye scoring.
+
+---
+
+## 📁 Folder Structure
+
+```plaintext
+krakeneye/
+├── main.go
+├── go.mod
+├── Dockerfile
+├── internal/
+│   ├── parser/              # Handles different site parsers (RARBG, future: 1337x, etc.)
+│   ├── ranker/              # Torrent ranking system (file size, seeders, source, etc.)
+│   ├── display/             # CLI output logic
+│   ├── sites/               # Mirror detection & piracy site definitions
+│   └── webui/               # Web UI server & static frontend
+│       ├── static/          # HTML, CSS, JS, images
+│       └── web-ui.go        # Starts the WebUI server
+└── internal/telegrambot/    # (WIP) Telegram bot interface
+```
 
 ---
 
 ## 🗺️ Roadmap
 
 ### 🔧 Immediate Tasks
-- Finish complete RARBG parser (multiple pages, mirror failover)
-- Implement torrent ranking logic based on seeders/quality
-- Add CLI help menu and usage flags
+
+- 🛠 Improve scoring logic (codecs, uploader trust)
+- 🕵️ Add fallback to 1337x when RARBG fails
+- 📱 Polish Telegram bot commands (`/search`, `/get`)
 
 ### 🏴‍☠️ Planned Features
-- Support for **1337x**, **KickassTorrent**, and more
-- Intelligent ranking system
-- Proxy support for geo-restricted users
-- UI dashboard for web-based access
-- .torrent file support
-- ML-based ranking and recommendation engine (stretch goal)
 
----
-
-## 🧠 Example
-
-```
-🔍 Enter search query (e.g. interstellar 2014): the matrix 1999
-```
-
-Result:
-```
-🎬 Title: The.Matrix.1999.1080p.BluRay.x264
-📁 Size: 1.9 GB
-🔢 Seeders: 1245
-🧷 Magnet: magnet:?xt=urn:btih:...
-```
-
----
-
-## 📁 File Structure
-
-```plaintext
-krakeneye/
-├── main.go
-├── go.mod
-├── go.sum
-└── internal/
-    ├── parser/
-    │   ├── factory.go          # Determines which parser to use
-    │   ├── parser.go           # Common parser interface
-    │   └── rarbg_parser.go     # Parses RARBG listings
-    ├── ranker/
-    │   └── ranker.go           # Torrent ranking logic (TODO)
-    └── sites/
-        ├── get_working_mirror.go  # Finds a working mirror
-        └── piracy_sites.go        # Defines supported sites
-```
+- ✅ Web UI (done)
+- 🧠 Intelligent ranking engine
+- 🧭 Proxy + region unlock
+- 💾 .torrent file download support
+- 🤖 ML-powered recommendation engine (stretch goal)
+- 🐳 Docker & DevOps CI/CD pipelines
 
 ---
 
@@ -115,4 +113,4 @@ MIT License (See [LICENSE](./LICENSE) file)
 ---
 
 **Raise the Kraken.** 🏴‍☠️  
-Built with Go and the spirit of piracy.
+Built with Go and the spirit of piracy by [sanjaix21](https://github.com/sanjaix21)
