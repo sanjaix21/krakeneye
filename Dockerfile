@@ -11,4 +11,6 @@ WORKDIR /app
 
 COPY --from=builder /app/krakeneye .
 
+EXPOSE 8787
+
 CMD ["./krakeneye", "--web"]
