@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 
 	"github.com/sanjaix21/krakeneye/internal/parser"
 	"github.com/sanjaix21/krakeneye/internal/ranker"
@@ -35,14 +36,18 @@ func StartServer(port int) {
 			return
 		}
 
-		enriched := torrentParser.EnrichTorrents(torrents)
+		enrichedTorrents := torrentParser.EnrichTorrents(torrents)
 		rankerFunc := &ranker.RankTorrent{}
 		var enrichedPtrs []*parser.TorrentFile
-		for i := range enriched {
-			enriched[i].Score = rankerFunc.RankTorrentFile(enriched[i])
-			enriched[i].SiteName = result.SiteName
-			enrichedPtrs = append(enrichedPtrs, &enriched[i])
+		for i := range enrichedTorrents {
+			enrichedTorrents[i].Score = rankerFunc.RankTorrentFile(enrichedTorrents[i])
+			enrichedTorrents[i].SiteName = result.SiteName
+			enrichedPtrs = append(enrichedPtrs, &enrichedTorrents[i])
 		}
+
+		sort.Slice(enrichedPtrs, func(i, j int) bool {
+			return enrichedPtrs[i].Score > enrichedPtrs[j].Score
+		})
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(enrichedPtrs)
