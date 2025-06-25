@@ -25,7 +25,12 @@ func NewRarbgParser(mirrorURL string) *RarbgParser {
 func (r *RarbgParser) Search(query string) ([]TorrentFile, error) {
 	searchURL := fmt.Sprintf("%ssearch/?search=%s", r.BaseURL, strings.ReplaceAll(query, " ", "+"))
 	fmt.Println("🌍 Search URL:", searchURL)
-	resp, err := http.Get(searchURL)
+	req, _ := http.NewRequest("GET", searchURL, nil)
+	req.Header.Set(
+		"User-Agent",
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/114.0.0.0 Safari/537.36",
+	)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("received non-OK status code from RARBG: %s", err)
 	}
@@ -147,7 +152,13 @@ func (r *RarbgParser) FetchTorrentDetails(torrent *TorrentFile) error {
 		detailURL = r.BaseURL + strings.TrimPrefix(torrent.Href, "/")
 	}
 
-	resp, err := http.Get(detailURL)
+	req, _ := http.NewRequest("GET", detailURL, nil)
+	req.Header.Set(
+		"User-Agent",
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/114.0.0.0 Safari/537.36",
+	)
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to fetch torrent details: %w", err)
 	}
