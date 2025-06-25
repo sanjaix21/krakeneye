@@ -1,6 +1,6 @@
 # 🧿 KrakenEye
 
-**KrakenEye** is a command-line torrent discovery tool built for pirates, by pirates. It scrapes torrent data from public trackers, starting with **RARBG**, with plans to expand into **1337x** and **KickassTorrent**.
+**KrakenEye** is a command-line torrent aggregator tool built for pirates, by pirates. It scrapes torrent data from public trackers, starting with **RARBG**, with plans to expand into **1337x** and **KickassTorrent**.
 
 > ⚠️ **Disclaimer:** This project is for educational and research purposes only. Use responsibly and comply with all applicable laws in your region.
 
