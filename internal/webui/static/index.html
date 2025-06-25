@@ -2,53 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KrakenEye 🐉</title>
+  <title>KrakenEye 🐉 - Retro Torrent Hunter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="https://twemoji.maxcdn.com/v/latest/72x72/1f3f4.png" type="image/png">
-  <script src="style.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: radial-gradient(ellipse at center, #1a0000 0%, #000000 100%);
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'orbitron': ['Orbitron', 'monospace'],
+            'tech': ['Share Tech Mono', 'monospace'],
+          },
+          animation: {
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'scan': 'scan 2s linear infinite',
+            'matrix': 'matrix 20s linear infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
     }
-  </style>
+  </script>
 </head>
-<body class="text-white font-mono min-h-screen">
+<body class="bg-black text-green-400 font-tech min-h-screen overflow-x-hidden">
+  
+  <!-- Matrix Rain Background -->
+  <div id="matrix-bg" class="fixed inset-0 z-0 opacity-10"></div>
+  
+  <!-- Scanlines Effect -->
+  <div class="scanlines fixed inset-0 z-10 pointer-events-none"></div>
+  
+  <!-- Main Content -->
+  <div class="relative z-20">
+    
+    <!-- Header Section -->
+    <header class="text-center pt-12 pb-8">
+      <div class="retro-container mx-auto max-w-4xl px-6">
+        
+        <!-- Logo with Glow Effect -->
+        <div class="logo-container mb-6">
+          <img src="img/krakeneyeicon.png" alt="KrakenEye" class="mx-auto w-24 h-24 mb-4 retro-glow">
+          <h1 class="font-orbitron font-black text-6xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-green-400 animate-glow mb-2">
+            KRAKENEYE
+          </h1>
+          <div class="retro-subtitle">
+            <span class="text-cyan-400 text-xl font-orbitron tracking-widest">🐉 RETRO TORRENT HUNTER 🐉</span>
+          </div>
+        </div>
+        
+        <!-- Creator Credit -->
+        <div class="creator-info text-green-300 text-sm mb-8">
+          <span class="opacity-75">CREATED BY </span>
+          <a href="https://github.com/sanjaix21" target="_blank" 
+             class="text-cyan-400 hover:text-white transition-colors duration-300 font-bold tracking-wider">
+            SANJAIX21
+          </a>
+        </div>
+        
+      </div>
+    </header>
 
-  <!-- Logo and Header -->
-  <div class="text-center mt-8">
-    <img src="img/krakeneyeicon.png" alt="KrakenEye Logo" class="mx-auto w-20 h-20 mb-4">
-    <h1 class="text-5xl font-bold text-red-600 drop-shadow-xl">KrakenEye 🐉</h1>
-    <p class="text-gray-300 text-sm mt-1">
-      Torrent finder tool. Created by
-      <a href="https://github.com/sanjaix21" target="_blank" class="text-red-400 underline hover:text-white">
-        sanjaix21
-      </a>
-    </p>
+    <!-- Search Section -->
+    <section class="search-section mb-12">
+      <div class="retro-container mx-auto max-w-2xl px-6">
+        
+        <div class="search-wrapper relative">
+          <div class="search-border"></div>
+          <div class="flex">
+            <input id="searchInput" 
+                   class="search-input flex-1 bg-black border-2 border-green-400 text-green-400 px-6 py-4 text-lg font-tech placeholder-green-600 focus:border-cyan-400 focus:text-cyan-400 focus:outline-none transition-all duration-300"
+                   placeholder="ENTER SEARCH QUERY... (e.g. INTERSTELLAR 2014)"
+                   autocomplete="off">
+            <button onclick="searchTorrents()" 
+                    class="search-btn bg-gradient-to-r from-green-500 to-cyan-500 hover:from-cyan-500 hover:to-green-500 px-8 py-4 text-black font-orbitron font-bold text-lg transition-all duration-300 transform hover:scale-105">
+              SCAN
+            </button>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Status Display -->
+    <section id="statusSection" class="status-section mb-8 hidden">
+      <div class="retro-container mx-auto max-w-4xl px-6">
+        <div class="status-display bg-black border border-green-400 p-6 rounded-lg">
+          <div class="flex items-center justify-center space-x-4">
+            <div class="status-indicator"></div>
+            <div id="statusText" class="text-green-400 font-orbitron text-lg tracking-wider"></div>
+          </div>
+          <div id="progressBar" class="progress-bar mt-4">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+      <div class="retro-container mx-auto max-w-7xl px-6">
+        <div id="results" class="results-grid"></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-12 mt-16">
+      <div class="text-green-600 text-sm font-tech">
+        <p>🏴‍☠️ RAISE THE KRAKEN 🏴‍☠️</p>
+        <p class="mt-2 opacity-75">BUILT WITH GO AND THE SPIRIT OF PIRACY</p>
+      </div>
+    </footer>
+
   </div>
 
-  <!-- Search Input -->
-  <div class="flex justify-center mt-10">
-    <input id="searchInput"
-           class="w-2/3 p-3 rounded-l-xl border-none text-black text-lg focus:outline-none"
-           placeholder="Search torrents...">
-    <button onclick="searchTorrents()"
-            class="bg-red-700 hover:bg-red-600 p-3 rounded-r-xl text-white font-bold text-lg">
-      Search
-    </button>
-  </div>
-
-  <!-- Loading Spinner -->
-  <div id="loading" class="text-center mt-6 hidden">
-    <div class="flex justify-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-red-600"></div>
-    </div>
-    <p class="mt-3 text-red-400 italic">Searching torrents...</p>
-  </div>
-
-  <!-- Search Results -->
-  <div id="results" class="p-6 mt-6 max-w-5xl mx-auto grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2"></div>
-
+  <script src="app.js"></script>
 </body>
 </html>
-
