@@ -10,7 +10,7 @@
 
 **Current:** `v0.0.1-alpha`
 
-This is an early prototype release meant to test the parser and search engine.
+This, is an early prototype release meant to test the parser and search engine.
 
 ---
 
