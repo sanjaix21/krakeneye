@@ -1,118 +1,81 @@
 # 🧿 KrakenEye
 
-**KrakenEye** is a command-line torrent aggregator tool built for pirates, by pirates. It scrapes torrent data from public trackers, starting with **RARBG**, with plans to expand into **1337x** and **KickassTorrent**.
+## 🌐 Live Demo
 
-> ⚠️ **Disclaimer:** This project is for educational and research purposes only. Use responsibly and comply with all applicable laws in your region.
+Try out the live version of the Web UI here:  
+🔗 [https://krakeneye-web.onrender.com/](https://krakeneye-web.onrender.com/)
+
+---
+
+**KrakenEye** is a command-line and web-based torrent aggregator tool. It scrapes torrent data from public trackers, beginning with **RARBG**, and is designed for performance, reliability, and future extensibility.
+
+> ⚠️ **Disclaimer:** This project is intended for educational and research purposes only. Use responsibly and ensure compliance with all applicable laws in your jurisdiction.
 
 ---
 
 ## ⚙️ Version
 
-**Current:** `v0.0.1-alpha`
-
-This, is an early prototype release meant to test the parser and search engine.
+**Current:** `v0.1.0-beta`  
+This is a beta release with both CLI and Web UI support, RARBG parsing, and magnet link extraction.
 
 ---
 
-## 🎯 What It Does
+## 🎯 Features
 
-- 🌐 Connects to a working RARBG mirror
-- 🔍 Accepts a search query from the user (e.g., `interstellar 2014`)
-- 📄 Parses and displays:
+- Connects to a working RARBG mirror
+- Accepts search queries (e.g., `interstellar 2014`)
+- Parses and displays:
   - Torrent title
   - Size
   - Category
   - Seeders / Leechers
   - Uploader
   - Upload date
-  - Magnet link (✅ early feature)
+  - Magnet link
 
 ---
 
-## 📥 How To Use
+## 📥 How to Use
 
-```bash
-go run main.go
-```
+### CLI Mode
 
-Then enter your search term when prompted:
+1. Build the project:
+   ```bash
+   go build -o krakeneye
+   ```
 
-```bash
-🔍 Enter search query (e.g. interstellar 2014): interstellar 2014
-```
+2. Run the binary:
+   ```bash
+   ./krakeneye
+   ```
 
-The tool will:
-1. Find a working RARBG mirror
-2. Perform a search using your query
-3. Parse and display magnet links and torrent info
+3. Enter your search term when prompted:
+   ```bash
+   🔍 Enter search query (e.g. interstellar 2014): the matrix 1999
+   ```
 
----
+### Web UI Mode
 
-## 🗺️ Roadmap
+1. Build the project:
+   ```bash
+   go build -o krakeneye
+   ```
 
-### 🔧 Immediate Tasks
-- Finish complete RARBG parser (multiple pages, mirror failover)
-- Implement torrent ranking logic based on seeders/quality
-- Add CLI help menu and usage flags
+2. Run with the `--web` flag:
+   ```bash
+   ./krakeneye --web
+   ```
 
-### 🏴‍☠️ Planned Features
-- Support for **1337x**, **KickassTorrent**, and more
-- Intelligent ranking system
-- Proxy support for geo-restricted users
-- UI dashboard for web-based access
-- .torrent file support
-- ML-based ranking and recommendation engine (stretch goal)
-
----
-
-## 🧠 Example
-
-```
-🔍 Enter search query (e.g. interstellar 2014): the matrix 1999
-```
-
-Result:
-```
-🎬 Title: The.Matrix.1999.1080p.BluRay.x264
-📁 Size: 1.9 GB
-🔢 Seeders: 1245
-🧷 Magnet: magnet:?xt=urn:btih:...
-```
-
----
-
-## 📁 File Structure
-
-```plaintext
-krakeneye/
-├── main.go
-├── go.mod
-├── go.sum
-└── internal/
-    ├── parser/
-    │   ├── factory.go          # Determines which parser to use
-    │   ├── parser.go           # Common parser interface
-    │   └── rarbg_parser.go     # Parses RARBG listings
-    ├── ranker/
-    │   └── ranker.go           # Torrent ranking logic (TODO)
-    └── sites/
-        ├── get_working_mirror.go  # Finds a working mirror
-        └── piracy_sites.go        # Defines supported sites
-```
+3. Open your browser and go to: [http://localhost:8787](http://localhost:8787)
 
 ---
 
 ## 🤝 Contributions
 
-All hands on deck! This ship is still being built — contributions, feature requests, and suggestions are welcome.
+Contributions are welcome. If you'd like to contribute, please open an issue or submit a pull request. Ensure your code is well-documented and tested. For major changes, please open a discussion first.
 
 ---
 
 ## ⚓ License
 
-MIT License (See [LICENSE](./LICENSE) file)
-
----
-
-**Raise the Kraken.** 🏴‍☠️  
-Built with Go and the spirit of piracy.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
