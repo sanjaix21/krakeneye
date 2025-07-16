@@ -1,4 +1,4 @@
-module github.com/sanjaix21/krakeneye
+module sanjaix21/krakeneye
 
 go 1.24.2
 
