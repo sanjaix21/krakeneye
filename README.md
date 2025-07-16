@@ -3,7 +3,7 @@
 ## 🌐 Live Demo
 
 Try out the live version of the Web UI here:  
-🔗 [https://krakeneye-web.onrender.com/](https://krakeneye.sanjai.lol/)
+🔗 [https://krakeneye.sanjai.com/](https://krakeneye.sanjai.lol/)
 
 ---
 
