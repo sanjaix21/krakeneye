@@ -5,9 +5,8 @@ package ranker
 
 import (
 	"math"
+	"sanjaix21/krakeneye/internal/parser"
 	"strings"
-
-	"github.com/sanjaix21/krakeneye/internal/parser"
 )
 
 /*

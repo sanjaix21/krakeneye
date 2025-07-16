@@ -2,10 +2,9 @@ package display
 
 import (
 	"fmt"
+	"sanjaix21/krakeneye/internal/parser"
+	"sanjaix21/krakeneye/internal/ranker"
 	"sort"
-
-	"github.com/sanjaix21/krakeneye/internal/parser"
-	"github.com/sanjaix21/krakeneye/internal/ranker"
 )
 
 type DebugDisplay struct {

@@ -9,14 +9,13 @@ import (
 	"log"
 	"net"
 	"os"
+	"sanjaix21/krakeneye/internal/display"
+	"sanjaix21/krakeneye/internal/parser"
+	"sanjaix21/krakeneye/internal/ranker"
+	"sanjaix21/krakeneye/internal/sites"
+	"sanjaix21/krakeneye/internal/webui"
 	"strconv"
 	"strings"
-
-	"github.com/sanjaix21/krakeneye/internal/display"
-	"github.com/sanjaix21/krakeneye/internal/parser"
-	"github.com/sanjaix21/krakeneye/internal/ranker"
-	"github.com/sanjaix21/krakeneye/internal/sites"
-	"github.com/sanjaix21/krakeneye/internal/webui"
 )
 
 func getUserInput(query string) string {

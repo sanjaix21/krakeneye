@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/sanjaix21/krakeneye/internal/parser"
-	"github.com/sanjaix21/krakeneye/internal/ranker"
-	"github.com/sanjaix21/krakeneye/internal/sites"
+	"sanjaix21/krakeneye/internal/parser"
+	"sanjaix21/krakeneye/internal/ranker"
+	"sanjaix21/krakeneye/internal/sites"
 )
 
 func StartServer(port int) {
