@@ -8,6 +8,7 @@ import (
 	"sanjaix21/krakeneye/internal/parser"
 	"sanjaix21/krakeneye/internal/ranker"
 	"sanjaix21/krakeneye/internal/sites"
+	"sort"
 )
 
 func StartServer(port int) {
@@ -43,8 +44,12 @@ func StartServer(port int) {
 			enrichedPtrs = append(enrichedPtrs, &enriched[i])
 		}
 
+		sort.Slice(enrichedPtrs, func(i, j int) bool {
+			return enrichedPtrs[i].Score > enrichedPtrs[j].Score
+		})
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(enrichedPtrs)
+		_ = json.NewEncoder(w).Encode(enrichedPtrs)
 	})
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))

@@ -18,9 +18,9 @@ var PiracySites = []Site{
 		Mirrors: []string{
 			"https://en.rarbg.gg/",
 			"https://rargb.to/",
-			"https://www2.rarbggo.to/",
 			"https://www.rarbgproxy.to/",
 			"https://www.proxyrarbg.to/",
+			"https://www2.rarbggo.to/",
 		},
 	},
 
